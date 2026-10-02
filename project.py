@@ -29,7 +29,34 @@ class DataReader:
                         amino = parting[1]
                         codon_table[codon] = amino
                     else:
-                        raise DataFileError(f"Error in codon file{line_num}, The codon length should be 3 chractars.")
+                        raise DataFileError(f"Error in codon file {line_num} : The codon length should be 3 chractars.")
 
                 else:
-                    raise DataFileError(f"Error in codon file{line_num}, The line structure should consist of two parts: codon, amino asid.")
+                    raise DataFileError(f"Error in codon file {line_num} : The line structure should consist of two parts: codon, amino asid.")
+        return codon_table
+
+
+    def read_amino_weights(self):
+        weights = {}
+        with open(self.weights_path, "r", encoding="utf-8") as file:
+            line_num = 0
+            for line in file:
+                line_num += 1
+                clean_line = line.strip()
+
+                if not clean_line:
+                    continue
+
+                parting = clean_line.split()
+
+                if len(parting) == 2:
+                    amino = parting[0].upper()
+
+                    if amino is int(parting[1]):
+                        weights[amino] = float(parting[1])
+                    else:
+                        raise DataFileError(f"Error in weights file {line_num} : The weight should be a digit.")
+                else:
+                    raise DataFileError(f"Error in weight file {line_num} : The line structure should consist of two parts.")
+        
+        return weights
