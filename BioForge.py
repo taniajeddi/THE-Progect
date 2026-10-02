@@ -12,8 +12,9 @@ class DataReader:
 
 
         with open(self.codon_read, "r", encoding="utf-8") as f:
-            
+            line_num = 0
             for line in f:
+                line_num +=1
                 vivid_line = line.strip()
                 if not vivid_line:
                     continue
