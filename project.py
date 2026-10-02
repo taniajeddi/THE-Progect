@@ -3,7 +3,7 @@ class DataFileError(Exception):
 
 
 class DataReader:
-    def __init__(self, codon_path, weights_path):
+    def __init__(self, codon_path="data/codon.txt", weights_path="data/weights.txt"):
         self.codon_path = codon_path
         self.weights_path = weights_path
 
@@ -35,6 +35,17 @@ class DataReader:
                     raise DataFileError(f"Error in codon file {line_num} : The line structure should consist of two parts: codon, amino asid.")
         return codon_table
 
+    def is_number(self, text_to_check):
+        if len(text_to_check) > 0:
+            if text_to_check.count('.') <= 1:
+                for char in text_to_check:
+                    if char.isdigit() or char == '.':
+                        continue
+                    else:
+                        return False
+
+                return True
+        return False   
 
     def read_amino_weights(self):
         weights = {}
@@ -52,7 +63,7 @@ class DataReader:
                 if len(parting) == 2:
                     amino = parting[0].upper()
 
-                    if amino is int(parting[1]):
+                    if self.is_number(parting[1]):
                         weights[amino] = float(parting[1])
                     else:
                         raise DataFileError(f"Error in weights file {line_num} : The weight should be a digit.")
